@@ -31,6 +31,45 @@
 
     </div> 
 
+    <!-- 引入js文件 -->
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script>
+    $(function(){
+        $('.input_sub').on('click',function(e){
+            e.preventDefault();
+            var userName=$('.input_txt').val().trim();
+            var password=$('.input_pass').val().trim();
+           // console.log(userName +':'+password);
+           if(userName==""||password==""){
+                alert('输入的密码和名字不能为空,重新输入');
+                return;
+           }
+           // 输入正确  就发送ajax请求
+           $.ajax({
+               type:'post',
+               url:'https://autumnfish.cn/big/admin/login',
+               data:{
+                user_name:userName,
+                password:password
+               },
+               success:function(backData){
+               // console.log(backData);
+               //判断 
+               if(backData.code==200){
+                   window.location.href='./index.html';
+
+               }else{
+                   alert('验证错误');
+               }
+               
+                
+               }
+           })
+         
+            
+        });
+    })
+    </script>
 </body>
 
 </html>
