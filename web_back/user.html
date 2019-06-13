@@ -77,7 +77,7 @@
                     for (var key in backData.data) {
                         $('input.' + key).val(backData.data[key]);
                     }
-                    $('.user_pic').attr('src', backData.data.user_pic);
+                    $('img.user_pic').attr('src', backData.data.user_pic);
                 }
             });
 
@@ -94,13 +94,13 @@
             //给修改按钮一个点击事件
             $('.btn-success').on('click', function (e) {
                 e.preventDefault();//阻止默认提交跳转
-                //创建一个forData获取form'表单里面的所有数据
-                var forData = new FormData($('from')[0]);
+                //创建一个formData获取form'表单里面的所有数据
+                var formData = new FormData($('form')[0]);
                 //发送ajax请求
                 $.ajax({
                     type: 'post',
                     url: 'http://localhost:8000/admin/userinfo_edit ',
-                    data: FormData,
+                    data: formData,
                     contentType: false,//不要设置请求头
                     processData: false,//不要帮我把参数转成key=value格式
                     success: function (backData) {
@@ -109,10 +109,9 @@
                             console.log('修改成功');
 
                         }
-
                     }
-                })
-            })
+                });
+            });
 
         })
     </script>
