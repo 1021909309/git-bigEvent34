@@ -66,7 +66,7 @@
                         <td class="text-center">
                             <a href="javascript:editTr({&quot;id&quot;:&quot;4&quot;,&quot;slug&quot;:&quot;travel&quot;,&quot;name&quot;:&quot;爱旅行&quot;});"
                                 class="btn btn-info btn-xs">编辑</a>
-                            <a href="javascript:deleteTr( 4 );" class="btn btn-danger btn-xs">删除</a>
+                            <a href="javascript:deleteTr( 4 );" class="btn btn-danger btn-xs ">删除</a>
                         </td>
                     </tr>
                 </tbody>
@@ -135,8 +135,8 @@
                 <td>{{$value.name}}</td>
                 <td>{{$value.slug}}</td>
                 <td class="text-center">
-                    <a href="javascript:editTr({&quot;id&quot;:&quot;4&quot;,&quot;slug&quot;:&quot;travel&quot;,&quot;name&quot;:&quot;爱旅行&quot;});" class="btn btn-info btn-xs">编辑</a>
-                    <a href="javascript:deleteTr( 4 );" class="btn btn-danger btn-xs">删除</a>
+                    <a href="javascript:void(0);" data_id="{{$value.id}}" class="btn btn-info btn-xs">编辑</a>
+                    <a href="javascript:void(0);" data_id="{{$value.id}}" class="btn btn-danger btn-xs btn_delete">删除</a>
                 </td>
             </tr>
     {{/each}}
@@ -152,6 +152,8 @@
            1. 结合模板引擎来渲染
            */
         $(function () {
+            //获取所有文章封装函数
+           function getCategory(){
             $.ajax({
                 type: 'get',
                 url: 'http://localhost:8000/admin/category_search',
@@ -163,6 +165,9 @@
                    }
                 }
             });
+           }
+           //页面一加载就调用一次
+           getCategory()
 
             //点击模态框中的确认按钮
             $('#model_add').click(function () {
@@ -180,19 +185,21 @@
                        // console.log(backData);
                         if(backData.code==200){
                             //新增成功后再发一次ajax请求加载
-                            $.ajax({
-                                type:'get',
-                                url:'http://localhost:8000/admin/category_search',
-                                success: function (backData) {
-                                    //console.log(backData);
-                                    if (backData.code == 200) {
-                                        //通过模板引擎把返回的数据渲染到页面
-                                        //调用模板引擎的方法
-                                        var resHtml = template('tmp_cate', backData);
-                                        $('tbody').html(resHtml);
-                                    }
-                                }
-                            });
+                            // $.ajax({
+                            //     type:'get',
+                            //     url:'http://localhost:8000/admin/category_search',
+                            //     success: function (backData) {
+                            //         //console.log(backData);
+                            //         if (backData.code == 200) {
+                            //             //通过模板引擎把返回的数据渲染到页面
+                            //             //调用模板引擎的方法
+                            //             var resHtml = template('tmp_cate', backData);
+                            //             $('tbody').html(resHtml);
+                            //         }
+                            //     }
+                            // });
+                            //新增成功后,重新的发送一次ajax请求加载所有的文字类别
+                            getCategory();
                         }
                     }
                 });
@@ -201,7 +208,32 @@
             $('#addModal').modal('hide');
         });
 
-
+      
+      
+        //给删除按钮设置点击事件 委托注册 因为是模板
+            $('tbody').on('click','a.btn_delete',function(){
+                var that=$(this)//用变量把当前this保存一下
+                //获取当前id
+                var id= $(this).attr('data_id');
+                console.log(id);
+                //发送ajax请求删除这条信息
+                $.ajax({
+                    type:'post',
+                    url:'http://localhost:8000/admin/category_delete',
+                    data:{
+                        id:id
+                    },
+                    success:function(backData){
+                        console.log(backData);
+                        if(backData.code==200){
+                            // getCategory()//再次渲染  但是会加重浏览器运作速度 消耗性能
+                            that.parent().parent().remove();//所以用这个代替 
+                        }
+                        
+                    }
+                })
+                
+            })
 
         })
 
