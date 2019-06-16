@@ -24,14 +24,14 @@
                 <div class="col-xs-6">
                     <form class="form-inline">
                         <select id="selCategory" name="" class="form-control input-sm">
-                            <option>所有分类</option>
+                            <option value="">所有分类</option>
                             <option>未分类</option>
                             <option>奇趣事</option>
                             <option>会生活</option>
                             <option>爱旅行</option>
                         </select>
                         <select id="selStatus" name="" class="form-control input-sm">
-                            <option>所有状态</option>
+                            <option value="">所有状态</option>
                             <option >草稿</option>
                             <option>已发布</option>
                         </select>
@@ -343,12 +343,13 @@
                         //生成模板 渲染显示在页面上
                         var resHtml=template('tmp-article-list',backData);
                         $('tbody').html(resHtml);
-                    }
-                    
+                    }  
                 }
-            })
-        })
+            });
+        });
 
+        //页面一进来就要筛选一次(所有分类.所有状态)
+        $('#btnSearch').trigger('click');
 
     </script>
 
